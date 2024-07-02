@@ -1,5 +1,7 @@
 # Algorithimic Price Discrimination Game
 
+
+
 ## Economic Model
 
 The economic model is inspired by the [Esteves (2014)](https://onlinelibrary-wiley-com.tilburguniversity.idm.oclc.org/doi/full/10.1111/sjoe.12061) model of price discrimination with private and imperfect information. 
@@ -37,7 +39,17 @@ With $b \in [0,1]$ denoting the strength of the signal. Upon receiving the signa
 
 
 ## Q-Learning Algorithm
+
+### Action Space
+
+### State Space
+
+### Updating Rules
 $$
  Q_i^{t+1}(a_t|s_t) = (1-\alpha)*Q_i^t(a_t|s_t) + \alpha * (\pi_{t+1} + \delta * max_{a^\prime}(Q_i^t(a^\prime|s_{t+1})))
+$$
+### Policy
+$$
+\epsilon_t = e^{-\beta t}
 $$
 ## Simulation code
