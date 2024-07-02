@@ -42,14 +42,43 @@ With $b \in [0,1]$ denoting the strength of the signal. Upon receiving the signa
 
 ### Action Space
 
+In the no PD case the action set $A_{noPD}$ contains all potential prices that the firm can set from price distribution $P$. In the PD case, the action set $A_{PD}$ consists of all possible bundles of prices $(P_L,P_R)$ where $P_L$ and $P_R$ denotes the prices for signal $L$ and $R$ respectively. The algorithm decides on which action $a_j \in A_{PD}$ to undertake  before observing the signal.
+
 ### State Space
 
+Each state is a combination of the actions $a$ undertaken by both algorithms. In the no PD case the algorithm observes its own and the competitors price as the state. As for the PD case, the algorithm observes the price bundles set by itself and the competitor. The state space has a one-period memory, hence every period the previous state gets replaced with the new state. A one-period memory is implemented to restrict the cardinality of the state space. 
+
 ### Updating Rules
+
+The algorithm update the expected value of the corresponding state-action cell using the following equation:
+
 $$
  Q_i^{t+1}(a_t|s_t) = (1-\alpha)*Q_i^t(a_t|s_t) + \alpha * (\pi_{t+1} + \delta * max_{a^\prime}(Q_i^t(a^\prime|s_{t+1})))
 $$
 ### Policy
+
+The algorithm determines its action based on whether it's exploring or exploiting. During exploration, it selects a random action $a_j \in A$. During exploitation, it selects the action that maximizes the expected return based on the current state. To put it formally, during exploitation, the algorithm selects the action $a_j$ according to: $max_a(Q^t_i(a|s_t))$. The decision between exploring and exploiting is dictated by the policy of the algorithm. This project adopts the time-declining $\epsilon$-greedy policy as described in [Calvano et al. (2020)](https://www-aeaweb-org.tilburguniversity.idm.oclc.org/articles?id=10.1257/aer.20190623):
+
 $$
 \epsilon_t = e^{-\beta t}
 $$
+
+ Where $\beta > 0$ is a parameter that dictates the rate of exploration decline. $\epsilon$ determines whether the algorithm will explore or exploit. There is an $\epsilon$ chance that the algorithm will explore and a $(1-\epsilon)$ that the algorithm will exploit. A good rule of thumb for setting $\beta$ is to set it such that at the end period $T$ the chance for exploring is 1 over the convergence criteria I.E. $\epsilon_{t=T} = \frac{1}{M}$. This specification ensures runs only convergence in the end stages of a run, allowing for higher levels of learning.
+
 ## Simulation code
+
+The simulation code in Algo PD Game Simulation.py uses the following for-loop structure for both the no PD and PD case:
+
+| Pseudo Code                                                      |
+|------------------------------------------------------------------|
+| 1 Initialise Q-Matrices QA, QB to Q0                             |
+| 2 Set state S0 randomly                                          |
+| 3 Initialise t = 0, m = 0                                        |
+| **3 Start the simulation run**                                   |
+| 4 \| Determine actions aA, aB                                    |
+| 5 \| Calculate payouts πA, πB                                    |
+| 6 \| Determine state St+1                                        |
+| 7 \| Update state-action cells QA(aA\|St), QA(aB\|St)            |
+| 8 \| Check if states St = St+1, if yes: convergence count m = +1 |
+| 9 \| Add period count t = +1                                     |
+| **10 Check if t = T or m = M , if not: loop back to step 3**     |
