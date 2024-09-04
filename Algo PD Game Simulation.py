@@ -1,12 +1,26 @@
+
+def check_dependencies(dependencies):
+    for library in dependencies:
+        try:
+            __import__(library)
+        except ImportError:
+            print(f"The library '{library}' is not installed. Please install it using pip:")
+            print(f"    pip install {library}")
+            sys.exit(1)  # Exit the script if a dependency is missing
+
+# List of required libraries
+dependencies = ["numpy", "pandas", "itertools", "sys", "os"]
+
+# Check the dependencies
+check_dependencies(dependencies)
+
+
 # Import Libraries
 import numpy as np
 import pandas as pd
 import itertools
-
-# Save data function
-def save_data(selected_data, save_path):
-    return selected_data.to_csv(save_path), print(f'Saved DataFrame to {save_path}')
-        
+import sys
+import os
 
 # Define functions used in simulation
 class simulation:
@@ -371,13 +385,56 @@ class Run_Simulation:
         return df
 
 
+# Save data function
+def save_data(selected_data, save_path):
+    return selected_data.to_csv(save_path), print(f'Saved DataFrame to {save_path}')
+
+PATH = input('Please enter directory for simulation results: ')
+PATH = os.path.normpath(PATH)
+
+print('Choose which simulation to run: \n 0: no price discrimination \n 1: price dicrimination \n any other number: exit')
+
+choice_sim = int(input())
+
+if choice_sim != 0 and choice_sim != 1:
+    print('Exiting program')
+    sys.exit(0)
+
+
+print('Use default settings? \n 0: default \n 1: custom')
+
+choice_default = int(input())
+
+if choice_default == 0:
+    RUNS = 100
+    t = 100000
+    m = 1000
+    N = 100
+    beta = 0.000092
+
+elif choice_default == 1:
+    print('# of runs: ')
+    RUNS = int(input())
+    print('End period T: ')
+    t = int(input())
+    print('Convergence criteria M: ')
+    m = int(input())
+    print('# of consumers: ')
+    N = int(input())
+    print('Value of exploration parameter β:')
+    beta = float(input())
+
+else:
+    print('Exiting program')
+    sys.exit(0)
+
 # Run and store simulations 
+if choice_sim == 0:
+    df = Run_Simulation.simulation_no_PD(runs=RUNS,T=t,M=m,n=N, β=beta)
+    save_data(df,  PATH)
 
-PATH = ''
+elif choice_sim == 1:
+    df = Run_Simulation.simulation_PD(runs=RUNS,T=t,M=m,n=N, β=beta)
+    save_data(df, PATH)
 
-df_no_pd = Run_Simulation.simulation_no_PD(runs=100,T=1000000,M=10000,n=100, β=0.0000092)
-save_data(df_no_pd, PATH)
-
-df_pd = Run_Simulation.simulation_PD(runs=100,T=1000000,M=10000,n=100, β=0.0000092)
-save_data(df_pd, PATH)
 
