@@ -1,4 +1,6 @@
-Hey there! I created this repository to upload the python code I wrote for my thesis. The code is in large the same as the code that I used for my thesis, however I did make some minor changes to make it run more smoothly on other systems. I might continue to make minor changes here and there from time to time.
+Hey there! 
+
+I created this repository to upload the python code I wrote for my thesis. The code is in large the same as the code that I used for my thesis, however I did make some minor changes to make it run more smoothly on other systems. I might continue to make minor changes here and there from time to time.
 
 There are 2 files in the repository: Algo PD Game Simulation.py and Results Reader.py. The main simulation file is Algo PD Game Simulation.py. When you run in it you first get asked to assign a directory for the program to store the simulation results. It can handle the standard windows format of `C:\Users\Name\Documents\etc` fine, however make sure to end the path with the desired name of the csv file. So for example: `C:\Users\Name\Documents\results.csv`. 
 
